@@ -1,0 +1,57 @@
+# Docker Compose pour environnement de développement local
+# Lance PostgreSQL, le backend, le frontend et l'admin
+
+version: '3.8'
+
+services:
+  # Base de données PostgreSQL
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: opendev
+      POSTGRES_PASSWORD: opendev_password
+      POSTGRES_DB: opendev_portfolio
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # API Backend
+  backend:
+    build: ./backend
+    ports:
+      - "4000:4000"
+    environment:
+      DATABASE_URL: postgresql://opendev:opendev_password@postgres:5432/opendev_portfolio
+      JWT_SECRET: your_jwt_secret_here
+      PORT: 4000
+    depends_on:
+      - postgres
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  # Frontend Next.js
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:4000
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+
+  # Admin Panel
+  admin:
+    build: ./admin
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: http://localhost:4000
+    volumes:
+      - ./admin:/app
+      - /app/node_modules
+
+volumes:
+  postgres_data:
