@@ -1,4 +1,4 @@
-import { cn } from "@/src/lib/utils";
+import { cn } from "@//lib/utils";
 import { Loader as MainLoader } from "lucide-react";
 import { ComponentProps } from "react";
 

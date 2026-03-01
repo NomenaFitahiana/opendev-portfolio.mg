@@ -11,7 +11,7 @@
     "format": "prettier --write .",
     "postinstall": "prisma generate",
     "shadcn add": "shadcn@latest add ",
-    "vercel build": "prisma generate && pnpm run build && prisma deploy"
+    "vercel build": "prisma generate && prisma migrate deploy && next build"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.4.0",
@@ -22,8 +22,12 @@
     "better-auth": "^1.4.18",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "developer-icons": "^6.0.5",
+    "framer-motion": "^12.34.2",
     "lucide-react": "^0.564.0",
+    "motion": "^12.34.2",
     "next": "16.1.6",
+    "nextjs-toploader": "^3.9.17",
     "radix-ui": "^1.4.3",
     "react": "19.2.3",
     "react-dom": "19.2.3",
