@@ -19,7 +19,8 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"], // from source directory
+      "~/*": ["./*"] // from the root directory
     }
   },
   "include": [
