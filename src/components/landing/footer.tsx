@@ -84,7 +84,7 @@ export const Footer = ({
   };
 
   return (
-    <footer className="border-border border-t bg-background">
+    <footer className="border-border border-t bg-background absolute bottom-0 w-full">
       <div className="mx-auto max-w-7xl px-6 py-6">
         <motion.div
           {...getAnimationProps()}
