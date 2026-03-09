@@ -1,7 +1,8 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "./generated/prisma/client";
-import { hash } from "@node-rs/argon2";
+import bcrypt from "bcrypt";
+import { randomUUID } from "crypto";
 
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
@@ -36,21 +37,18 @@ async function main() {
     return;
   }
 
-  const hashedPassword = await hash(ADMIN.password, {
-    memoryCost: 19456,
-    timeCost: 2,
-    outputLen: 32,
-    parallelism: 1,
-  });
+  const hashedPassword = await bcrypt.hash(ADMIN.password, 10);
 
   const user = await prisma.user.create({
     data: {
+      id: randomUUID(),
       name: ADMIN.name,
       email: ADMIN.email,
       emailVerified: true,
       role: "admin",
       accounts: {
         create: {
+          id: randomUUID(),
           accountId: ADMIN.email,
           providerId: "credential",
           password: hashedPassword,
@@ -71,4 +69,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-  
