@@ -11,7 +11,7 @@ import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 
 export const LoginForm = ({ ...props }: ComponentPropsWithRef<"form">) => {
-  const [pending, startTransition] = useTransition();
+  const [pending, setPending] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const form = useForm({
@@ -21,27 +21,30 @@ export const LoginForm = ({ ...props }: ComponentPropsWithRef<"form">) => {
       password: "",
       rememberMe: false,
     },
-    onSubmit: ({ email, password, rememberMe }) => {
-      startTransition(async () => {
-        await new Promise((r) => setTimeout(r, 300));
-        authClient.signIn.email({
-          email,
-          password,
-          rememberMe,
-          callbackURL: "/dashboard",
-          fetchOptions: {
-            onError: (ctx) => {
-              toast.error(
-                ctx.error.message ?? "Connexion echoue. Veuillez reessayer.",
-                { closeButton: true },
-              );
-            },
-            onSuccess: () => {
-              toast.success("Identifiants reconnus. Redirection en cours...");
-              form.reset();
-            },
+    onSubmit: async ({ email, password, rememberMe }) => {
+      await new Promise((r) => setTimeout(r, 300));
+      authClient.signIn.email({
+        email,
+        password,
+        rememberMe,
+        callbackURL: "/dashboard",
+        fetchOptions: {
+          onRequest: () => {
+            setPending(true);
           },
-        });
+          onError: (ctx) => {
+            toast.error(
+              ctx.error.message ?? "Connexion echoue. Veuillez reessayer.",
+              { closeButton: true },
+            );
+            setPending(false);
+          },
+          onSuccess: () => {
+            toast.success("Identifiants reconnus. Redirection en cours...");
+            form.reset();
+            setPending(false);
+          },
+        },
       });
     },
   });
