@@ -10,7 +10,7 @@
     "type-check": "tsc --noEmit",
     "format": "prettier --write .",
     "postinstall": "prisma generate",
-    "shadcn add": "shadcn@latest add ",
+    "shadcn:add": "npx shadcn@latest add",
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
     "vercel build": "prisma generate && prisma migrate deploy && next build"

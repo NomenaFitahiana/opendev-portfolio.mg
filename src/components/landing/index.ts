@@ -6,3 +6,6 @@ export * from "./hero-section";
 export * from "./process-section";
 export * from "./projects";
 export * from "./testimonials-section";
+export * from "./tech-stack-section";
+export * from "./collective-section";
+export * from "./contact-section";

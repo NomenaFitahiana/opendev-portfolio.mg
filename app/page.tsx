@@ -1,4 +1,4 @@
-import { Header, HeroSection, Process, Projects, Testimonials, FAQSection, CallToAction, Footer } from "@/components/landing";
+import { Header, HeroSection, Process, Projects, Testimonials, FAQSection, CallToAction, Footer, TechStack, Collective, ContactSection } from "@/components/landing";
 
 export default function Page() {
   return (
@@ -8,9 +8,11 @@ export default function Page() {
         <HeroSection />
         <Process />
         <Projects />
-        {/* <TechStack /> */}
+        <TechStack />
         <Testimonials />
+        <Collective />
         <FAQSection />
+        <ContactSection />
         <CallToAction />
       </main>
       <Footer />
