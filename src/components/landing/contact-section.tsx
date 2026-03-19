@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { z } from "zod";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,22 +14,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Mail, Phone, MapPin, Send, CheckCircle2 } from "lucide-react";
 import { useForm } from "../ui/tanstack-form";
 import { Loader } from "../ui/loader";
+import { contactSchema } from "@/schemas";
+import { requestQuoteAction } from "@/actions";
 import { toast } from "sonner";
-
-const contactSchema = z.object({
-  name: z
-    .string()
-    .min(2, "Le nom doit contenir au moins 2 caractères.")
-    .max(80, "Le nom est trop long."),
-  email: z
-    .email("Adresse email invalide.")
-    .min(1, "L'email est requis."),
-  projectDescription: z
-    .string()
-    .min(20, "Décrivez votre projet en au moins 20 caractères.")
-    .max(1000, "La description ne doit pas dépasser 1000 caractères."),
-  budget: z.string().min(1, "Veuillez sélectionner une fourchette de budget."),
-});
 
 const BUDGET_OPTIONS = [
   { value: "less_1k", label: "< 1 000 €" },
@@ -50,8 +36,8 @@ const CONTACT_INFO = [
   {
     icon: <Phone className="w-4 h-4" />,
     label: "Téléphone",
-    value: "+261 34 00 000 00",
-    href: "tel:+261340000000",
+    value: "+261 34 22 037 90",
+    href: "tel:+261342203790",
   },
   {
     icon: <MapPin className="w-4 h-4" />,
@@ -72,9 +58,15 @@ export function ContactSection() {
       projectDescription: "",
       budget: "",
     },
-    onSubmit: async () => {
-      await new Promise(r => setTimeout(r, 1000));
-      toast.info("Votre message a bien été envoyé !", { closeButton: true });
+    onSubmit: async (values) => {
+      setStatus("loading");
+      const { serverError } = await requestQuoteAction({ ...values });
+      if (serverError) {
+        toast.error(serverError ?? "Une erreur inattendue est survenue. Veuillez reessayer plus tard");
+        return;
+      }
+      setStatus("success");
+      form.reset();
     }
   });
 

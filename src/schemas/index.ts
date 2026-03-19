@@ -20,3 +20,16 @@ export const resetPasswordSchema = z
     error: "Les mots de passe ne correspondent pas",
     path: ["confirmPassword"],
   });
+
+export const contactSchema = z.object({
+  name: z
+    .string()
+    .min(2, "Le nom doit contenir au moins 2 caractères.")
+    .max(80, "Le nom est trop long."),
+  email: z.email("Adresse email invalide.").min(1, "L'email est requis."),
+  projectDescription: z
+    .string()
+    .min(20, "Décrivez votre projet en au moins 20 caractères.")
+    .max(1000, "La description ne doit pas dépasser 1000 caractères."),
+  budget: z.string().min(1, "Veuillez sélectionner une fourchette de budget."),
+});
