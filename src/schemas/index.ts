@@ -33,3 +33,21 @@ export const contactSchema = z.object({
     .max(1000, "La description ne doit pas dépasser 1000 caractères."),
   budget: z.string().min(1, "Veuillez sélectionner une fourchette de budget."),
 });
+
+export const projectSchema = z.object({
+  title: z.string().min(2, "Titre requis"),
+  clientName: z.string().min(1, "Nom du client requis"),
+  hideClientName: z.boolean().default(false),
+  shortDescription: z.string().max(200, "Maximum 200 caractères"),
+  longDescription: z.string().min(1, "Description détaillée requise"),
+  problem: z.string().optional(),
+  solution: z.string().optional(),
+  technologyIds: z.array(z.string()).default([]),
+  duration: z.coerce.number().min(1),
+  teamSize: z.coerce.number().min(1),
+  budget: z.coerce.number().optional(),
+  metrics: z.string().optional(),
+  status: z.enum(["IN_PROGRESS", "COMPLETED", "FEATURED"]).default("COMPLETED"),
+  featured: z.boolean().default(false),
+  order: z.coerce.number().default(0),
+});

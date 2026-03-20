@@ -34,7 +34,7 @@ const chartConfig: ChartConfig = {
 const chartData = [
   { title: "International", visitors: 8, fill: "var(--chart-1)" },
   { title: "Local", visitors: 5, fill: "var(--chart-2)" },
-  { title: "Agences", visitors: 3, fill: "var(--chart-3)" },
+  { title: "Agences", visitors: 3, fill: "var(--sup-accent-color)" },
 ];
 
 const totalProjects = chartData.reduce((acc, curr) => acc + curr.visitors, 0);
