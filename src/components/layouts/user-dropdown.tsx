@@ -4,7 +4,6 @@ import {
   Cog,
   LogOut,
 } from "lucide-react"
-
 import {
   Avatar,
   AvatarFallback,
@@ -26,6 +25,7 @@ import {
 } from "@/components/ui/sidebar"
 import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
+import { ThemeSwitcher } from "../theme-switcher";
 
 export function UserDropdown({
   user,
@@ -88,17 +88,22 @@ export function UserDropdown({
             <DropdownMenuSeparator />
 
             <DropdownMenuItem asChild>
-              <Link href="/dashboard/account">
+              <Link href="/account">
                 <BadgeCheck className="size-4" />
                 Mon compte
               </Link>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link href="/dashboard/settings">
+              <Link href="/settings">
                 <Cog className="size-4" />
                 Paramètres
               </Link>
             </DropdownMenuItem>
+
+            <div className="flex items-center justify-between px-2 py-1.5">
+              <span className="text-sm text-muted-foreground">Thème</span>
+              <ThemeSwitcher />
+            </div>
 
             <DropdownMenuSeparator />
 

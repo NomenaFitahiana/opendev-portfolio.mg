@@ -22,39 +22,39 @@ export const navItems = [
   },
   {
     title: "Projets",
-    url: "/dashboard/projects",
+    url: "/projects",
     icon: FolderKanban,
     items: [
-      { title: "Liste des projets", url: "/dashboard/projects" },
-      { title: "Nouveau projet", url: "/dashboard/projects/new" },
+      { title: "Liste des projets", url: "/projects" },
+      { title: "Nouveau projet", url: "/projects/new" },
     ],
   },
   {
     title: "Technologies",
-    url: "/dashboard/technologies",
+    url: "/technologies",
     icon: Cpu,
     items: [
-      { title: "Liste", url: "/dashboard/technologies" },
-      { title: "Nouvelle technologie", url: "/dashboard/technologies/new" },
+      { title: "Liste", url: "/technologies" },
+      { title: "Nouvelle technologie", url: "/technologies/new" },
     ],
   },
   {
     title: "Témoignages",
-    url: "/dashboard/testimonials",
+    url: "/testimonials",
     icon: MessageSquareQuote,
     items: [
-      { title: "Liste", url: "/dashboard/testimonials" },
-      { title: "Nouveau témoignage", url: "/dashboard/testimonials/new" },
+      { title: "Liste", url: "/testimonials" },
+      { title: "Nouveau témoignage", url: "/testimonials/new" },
     ],
   },
   {
     title: "Statistiques",
-    url: "/dashboard/stats",
+    url: "/stats",
     icon: BarChart3,
   },
   {
     title: "Demandes de contact",
-    url: "/dashboard/contacts",
+    url: "/contacts",
     icon: Inbox,
   },
 ];
