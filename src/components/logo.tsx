@@ -1,10 +1,16 @@
 import { cn } from "@/lib/utils";
 import { ComponentPropsWithoutRef } from "react";
 
+type LogoProps = {
+  labelClassName?: string,
+  withLabel: boolean
+} & ComponentPropsWithoutRef<"img">
+
 export const Logo = ({
   withLabel,
+  labelClassName,
   ...props
-}: ComponentPropsWithoutRef<"img"> & { withLabel: boolean }) => {
+}: LogoProps) => {
   return (
     <div className="flex items-center gap-2">
       <img
@@ -13,7 +19,7 @@ export const Logo = ({
         className={cn("w-14 h-14 rounded-lg", props.className)}
         {...props}
       />
-      {withLabel && <span className="text-xl font-semibold">OpenDev</span>}
+      {withLabel && <span className={cn("text-xl font-semibold", labelClassName)}>OpenDev</span>}
     </div>
   );
 };
