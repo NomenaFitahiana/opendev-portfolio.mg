@@ -39,6 +39,43 @@ export const createProjectAction = action
     revalidatePath("/projects");
   });
 
+export const updateProjectAction = action
+  .inputSchema(
+    projectSchema.extend({
+      id: z.string(),
+    }),
+  )
+  .action(async ({ parsedInput }) => {
+    const { id, technologyIds, ...data } = parsedInput;
+
+    const slug = slugify(data.title);
+
+    const existing = await prisma.project.findFirst({
+      where: {
+        slug,
+        NOT: { id },
+      },
+    });
+
+    if (existing) {
+      throw new Error("Un projet avec ce titre existe déjà.");
+    }
+
+    await prisma.project.update({
+      where: { id },
+      data: {
+        ...data,
+        slug,
+        technologies: {
+          set: [],
+          connect: technologyIds.map((id) => ({ id })),
+        },
+      },
+    });
+
+    revalidatePath("/projects");
+  });
+
 export const deleteProjectAction = action
   .inputSchema(z.object({ id: z.string() }))
   .action(async ({ parsedInput }) => {

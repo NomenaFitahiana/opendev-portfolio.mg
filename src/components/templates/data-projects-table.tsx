@@ -24,6 +24,8 @@ import { useAction } from "next-safe-action/hooks";
 import { duplicateProjectAction } from "@/actions/project.action";
 import { toast } from "sonner";
 import { ProjectRow } from "@/lib/query/project.query";
+import { DeleteProjectModal } from "./delete-project-modal";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const statusConfig = {
   COMPLETED: { label: "Terminé", variant: "secondary" as const },
@@ -109,22 +111,36 @@ const ProjectRowActions = ({ row }: { row: ProjectRow }) => {
 
   return (
     <div className="flex items-center justify-end gap-1">
-      <Button variant="ghost" size="icon-sm" asChild>
-        <Link href={`/dashboard/projects/${row.id}/edit`}>
-          <Edit2 className="size-3.5" />
-          <span className="sr-only">Modifier</span>
-        </Link>
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon-sm"
-        onClick={() => execute({ id: row.id })}
-        disabled={isPending}
-      >
-        <Copy className="size-3.5" />
-        <span className="sr-only">Dupliquer</span>
-      </Button>
-      {/* <DeleteProjectDialog id={row.id} /> */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="ghost" size="icon-sm" asChild>
+            <Link href={`/projects/${row.id}/edit`}>
+              <Edit2 className="size-3.5" />
+              <span className="sr-only">Modifier</span>
+            </Link>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <span>Modifier</span>
+        </TooltipContent>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            onClick={() => execute({ id: row.id })}
+            disabled={isPending}
+          >
+            <Copy className="size-3.5" />
+            <span className="sr-only">Dupliquer</span>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <span>Dupliquer</span>
+        </TooltipContent>
+      </Tooltip>
+      <DeleteProjectModal id={row.id} title={row.title} />
     </div>
   );
 };
