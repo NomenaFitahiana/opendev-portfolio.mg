@@ -5,12 +5,12 @@
 
 /* OpenDev colors */
 :root {
-  --main-color: #1D2A3A;
-  --secondary-color: #E1E8F0;
-  --accent-color: #A5C4D1;
-  --logo-color: #B6C5D4;
-  --sup-accent-color: #76A1B8;
-  --bg-color: #283B4A;
+  --main-color: #1d2a3a;
+  --secondary-color: #e1e8f0;
+  --accent-color: #a5c4d1;
+  --logo-color: #b6c5d4;
+  --sup-accent-color: #76a1b8;
+  --bg-color: #283b4a;
   --sidebar: hsl(0 0% 98%);
   --sidebar-foreground: hsl(240 5.3% 26.1%);
   --sidebar-primary: hsl(240 5.9% 10%);
@@ -47,6 +47,15 @@
   --chart-3: oklch(0.97 0.001 106.424);
   --chart-4: oklch(0.992 0 106.406);
   --chart-5: oklch(0.216 0.008 55.924);
+
+  /* multi-step modal class utilities */
+  --main: oklch(0.97 0 0);
+  --main-secondary: oklch(97% 0 0);
+  --main-muted: oklch(0.96 0 0);
+  --msm-primary: oklch(0 0 0);
+  --msm-primary-foreground: oklch(37.1% 0 0);
+  --msm-primary-muted: oklch(0.556 0 0);
+  --msm-border: oklch(0.885 0 0);
 }
 
 .dark {
@@ -83,6 +92,15 @@
   --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
   --sidebar-border: hsl(240 3.7% 15.9%);
   --sidebar-ring: hsl(217.2 91.2% 59.8%);
+
+  /* multi-step modal class utilities */
+  --main: oklch(0.178 0 0);
+  --main-secondary: oklch(0.205 0 0);
+  --main-muted: oklch(0.168 0 0);
+  --msm-primary: oklch(1 0 0);
+  --msm-primary-foreground: oklch(0.97 0 0);
+  --msm-primary-muted: oklch(0.708 0 0);
+  --msm-border: oklch(0.26 0 0);
 }
 
 body {
@@ -94,7 +112,7 @@ body {
     @apply border-border outline-ring/50;
   }
   body {
-    @apply  text-foreground;
+    @apply text-foreground;
   }
 }
 
@@ -139,4 +157,13 @@ body {
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+  
+  /* multi-step modal class utilities */
+  --color-main: var(--main);
+  --color-main-secondary: var(--main-secondary);
+  --color-main-muted: var(--main-muted);
+  --color-msm-primary: var(--msm-primary);
+  --color-msm-primary-foreground: var(--msm-primary-foreground);
+  --color-msm-primary-muted: var(--msm-primary-muted);
+  --color-msm-border: var(--msm-border);
 }

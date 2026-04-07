@@ -11,7 +11,7 @@ import { useAction } from "next-safe-action/hooks";
 import { deleteProjectAction } from "@/actions/project.action";
 import { toast } from "sonner";
 import { Loader } from "../ui/loader";
-import { AlertCircle, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 type DeleteProjectModalProps = {
@@ -38,9 +38,7 @@ export const DeleteProjectModal = ({
 
   const steps: MultiStepModalSteps[] = [
     {
-      title: <h5 className="flex items-center gap-2 font-medium text-base text-primary-foreground">
-        <AlertCircle size={18} color="orange" /> Attention
-      </h5>,
+      title: "Attention",
       description:
         "Cette action est irréversible. Toutes les données seront supprimées.",
     },

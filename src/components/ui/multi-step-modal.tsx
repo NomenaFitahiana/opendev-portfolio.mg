@@ -16,8 +16,8 @@ export const MultiStepModalTrigger = RadixDialog.Trigger;
 export const MultiStepModalClose = RadixDialog.Close;
 
 export type MultiStepModalSteps = {
-  title: React.ReactNode;
-  description: React.ReactNode;
+  title: string;
+  description: React.ReactNode | string;
 };
 
 type MultiStepModalContentProps = React.CustomComponentPropsWithRef<
@@ -76,7 +76,7 @@ export function MultiStepModalContent({
       <RadixDialog.Portal>
         <RadixDialog.Overlay
           className={cn(
-            "fixed inset-0 z-[999] bg-black/80 ease-out",
+            "fixed inset-0 z-999 bg-black/80 ease-out",
             "motion-safe:data-[state=open]:fade-in motion-safe:data-[state=open]:animate-in",
             "motion-safe:data-[state=closed]:fade-out motion-safe:data-[state=closed]:animate-out",
           )}
@@ -84,8 +84,8 @@ export function MultiStepModalContent({
         <RadixDialog.Content
           {...props}
           className={cn(
-            "w-[calc(100vw_-_--spacing(4))] max-w-96 overflow-hidden rounded-md border border-border bg-main focus:outline-none",
-            "-translate-x-1/2 fixed top-1/3 left-1/2 z-[1001] motion-safe:ease-out",
+            "w-[calc(100vw---spacing(4))] max-w-96 overflow-hidden rounded-md border border-msm-border bg-main focus:outline-none",
+            "-translate-x-1/2 fixed top-1/3 left-1/2 z-1001 motion-safe:ease-out",
             "motion-safe:data-[state=open]:fade-in motion-safe:data-[state=open]:animate-in",
             "motion-safe:data-[state=closed]:fade-out motion-safe:data-[state=closed]:animate-out",
           )}
@@ -105,39 +105,45 @@ export function MultiStepModalContent({
                 custom={direction}
               >
                 <div ref={ref} className="flex flex-col gap-2">
-                  <RadixDialog.Title className="font-medium text-base text-primary-foreground">
+                  <RadixDialog.Title className="font-medium text-base text-msm-primary-foreground">
                     {title}
                   </RadixDialog.Title>
-                  <RadixDialog.Description className="font-normal text-primary-muted text-sm/5.5">
-                    {description}
-                  </RadixDialog.Description>
+                  {typeof description == "string" ? (
+                    <RadixDialog.Description className="font-normal text-msm-primary-muted text-sm/5.5">
+                      {description}
+                    </RadixDialog.Description>
+                  ) : (
+                    <>{description}</>
+                  )}
                 </div>
               </motion.div>
             </AnimatePresence>
           </div>
-          <footer
-            className={cn(
-              "mt-2 flex items-center justify-between border-border border-t px-4 py-2",
-              "bg-main-muted *:rounded-md *:border *:border-border *:bg-main-secondary *:text-primary",
-              "*:h-8 *:w-24 *:px-3 *:font-medium *:text-[13px]/5.5",
-              "*:disabled:cursor-not-allowed *:disabled:opacity-50",
-            )}
-          >
-            <button
-              type="button"
-              onClick={() => handleControlsNavigation("previous")}
-              disabled={activeContentIndex === MIN_STEP}
+          {typeof description === "string" && (
+            <footer
+              className={cn(
+                "mt-2 flex items-center justify-between border-t border-msm-border px-4 py-2",
+                "bg-main-muted *:rounded-md *:border *:border-msm-border *:bg-main-secondary *:text-msm-primary",
+                "*:h-8 *:w-24 *:px-3 *:font-medium *:text-[13px]/5.5",
+                "*:disabled:cursor-not-allowed *:disabled:opacity-50",
+              )}
             >
-              Back
-            </button>
-            <button
-              type="button"
-              onClick={() => handleControlsNavigation("next")}
-              disabled={activeContentIndex === TOTAL_STEPS - 1}
-            >
-              Continue
-            </button>
-          </footer>
+              <button
+                type="button"
+                onClick={() => handleControlsNavigation("previous")}
+                disabled={activeContentIndex === MIN_STEP}
+              >
+                Back
+              </button>
+              <button
+                type="button"
+                onClick={() => handleControlsNavigation("next")}
+                disabled={activeContentIndex === TOTAL_STEPS - 1}
+              >
+                Continue
+              </button>
+            </footer>
+          )}
         </RadixDialog.Content>
       </RadixDialog.Portal>
     </MotionConfig>
