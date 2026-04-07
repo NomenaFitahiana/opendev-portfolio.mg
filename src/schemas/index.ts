@@ -51,3 +51,25 @@ export const projectSchema = z.object({
   featured: z.boolean().default(false),
   order: z.coerce.number().default(0),
 });
+
+export const testimonialSchema = z.object({
+  clientName: z
+    .string()
+    .min(2, "Le nom doit contenir au moins 2 caractères")
+    .max(60, "Le nom ne doit pas dépasser 60 caractères"),
+  clientRole: z
+    .string()
+    .min(2, "Le poste doit contenir au moins 2 caractères")
+    .max(80, "Le poste ne doit pas dépasser 80 caractères"),
+  company: z
+    .string()
+    .min(2, "L'entreprise doit contenir au moins 2 caractères")
+    .max(80, "L'entreprise ne doit pas dépasser 80 caractères"),
+  content: z
+    .string()
+    .min(20, "Le témoignage doit contenir au moins 20 caractères")
+    .max(500, "Le témoignage ne doit pas dépasser 500 caractères"),
+  photo: z.url("URL invalide").optional().or(z.literal("")),
+  projectId: z.string().optional().or(z.literal("")),
+  active: z.boolean().default(true),
+});

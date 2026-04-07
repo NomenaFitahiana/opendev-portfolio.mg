@@ -4,5 +4,7 @@ export * from "./project-activity-chart";
 export * from "./projects-table";
 export * from "./rich-sales-stat";
 export * from "./data-projects-table";
-export * from "./project-filters"
+export * from "./project-filters";
 export * from "./project-form";
+export * from "./testimonial-form";
+export * from "./testimonials-grid";
