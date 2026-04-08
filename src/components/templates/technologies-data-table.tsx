@@ -18,6 +18,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { TechnologyRow } from "@/lib/query/technology.query";
+import { Edit2, Trash2 } from "lucide-react";
+import { useAction } from "next-safe-action/hooks";
+import { deleteTechnologyAction } from "@/actions/technology.action";
+import { toast } from "sonner";
 
 // ─── Category config (matching tech-stack-section colors) ─────────────
 
@@ -87,6 +91,53 @@ function TechLogo({
   );
 }
 
+// ─── Actions cell ───────────────────────────────────────────────────────────────
+
+function ActionsCell({ row }: { row: TechnologyRow }) {
+  const router = useRouter();
+
+  const { execute: deleteTech, isPending: isDeleting } = useAction(
+    deleteTechnologyAction,
+    {
+      onSuccess: () => {
+        toast.success("Technologie supprimée.");
+      },
+      onError: ({ error }) =>
+        toast.error(error.serverError ?? "Erreur lors de la suppression"),
+    }
+  );
+
+  const handleDelete = () => {
+    if (confirm(`Êtes-vous sûr de vouloir supprimer "${row.name}" ?`)) {
+      deleteTech({ id: row.id });
+    }
+  };
+
+  return (
+    <div className="flex items-center gap-1">
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        className="text-amber-600 hover:text-amber-700 hover:bg-amber-100"
+        onClick={() => router.push(`/technologies/${row.id}/edit`)}
+        title="Modifier"
+      >
+        <Edit2 className="size-3.5" />
+      </Button>
+      <Button
+        variant="ghost"
+        size="icon-sm"
+        className="text-red-600 hover:text-red-700 hover:bg-red-100"
+        onClick={handleDelete}
+        disabled={isDeleting}
+        title="Supprimer"
+      >
+        <Trash2 className="size-3.5" />
+      </Button>
+    </div>
+  );
+}
+
 // ─── Columns ─────────────────────────────────────────────────────────────────
 
 const columnHelper = createColumnHelper<TechnologyRow>();
@@ -143,6 +194,12 @@ const columns = [
         month: "short",
         year: "numeric",
       }),
+  }),
+
+  columnHelper.display({
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => <ActionsCell row={row.original} />,
   }),
 ];
 
