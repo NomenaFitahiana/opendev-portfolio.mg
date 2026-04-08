@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
-import { useTransition } from "react";
+import { useTransition, useState, useDeferredValue } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -29,6 +29,9 @@ export const TechnologiesFilters = () => {
   const searchParams = useSearchParams();
   const [, startTransition] = useTransition();
 
+  const [searchInput, setSearchInput] = useState(searchParams.get("search") ?? "");
+  const deferredSearch = useDeferredValue(searchInput);
+
   const updateParam = (key: string, value: string | null) => {
     const params = new URLSearchParams(searchParams.toString());
     if (value) {
@@ -39,6 +42,16 @@ export const TechnologiesFilters = () => {
     startTransition(() => router.push(`${pathname}?${params.toString()}`));
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value);
+  };
+
+  const handleSearchBlur = () => {
+    if (searchInput !== (searchParams.get("search") ?? "")) {
+      updateParam("search", searchInput || null);
+    }
+  };
+
   const hasFilters =
     searchParams.has("search") || searchParams.has("category");
 
@@ -46,8 +59,10 @@ export const TechnologiesFilters = () => {
     <div className="flex flex-wrap items-center gap-3">
       <Input
         placeholder="Rechercher une technologie..."
-        defaultValue={searchParams.get("search") ?? ""}
-        onChange={(e) => updateParam("search", e.target.value || null)}
+        value={searchInput}
+        onChange={handleSearchChange}
+        onBlur={handleSearchBlur}
+        onKeyDown={(e) => e.key === "Enter" && handleSearchBlur()}
         className="max-w-xs"
       />
       <Select
