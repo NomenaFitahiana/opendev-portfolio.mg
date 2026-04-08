@@ -52,6 +52,12 @@ export const projectSchema = z.object({
   order: z.coerce.number().default(0),
 });
 
+export const technologySchema = z.object({
+  name: z.string().min(2, "Le nom doit contenir au moins 2 caractères").max(50, "Le nom ne doit pas dépasser 50 caractères"),
+  category: z.enum(["FRONTEND", "BACKEND", "MOBILE", "DATABASE", "DEVOPS", "DESIGN", "OTHER"]),
+  logo: z.string().optional(),
+});
+
 export const testimonialSchema = z.object({
   clientName: z
     .string()

@@ -8,3 +8,6 @@ export * from "./project-filters";
 export * from "./project-form";
 export * from "./testimonial-form";
 export * from "./testimonials-grid";
+export { TechnologiesFilters } from "./technology-filters";
+export { TechnologiesDataTable } from "./technologies-data-table";
+export { TechnologyForm } from "./technology-form";
