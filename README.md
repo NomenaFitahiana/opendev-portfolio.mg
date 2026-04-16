@@ -1,51 +1,46 @@
-# OpenDev Portfolio
+<div style="display: flex; align-items: center; gap: 16px;">
 
-Portfolio professionnel pour OpenDev Madagascar - Plateforme de mise en valeur des projets et du collectif de développeurs.
+<img src="./public/logo_opendev.webp" style="height: 100px; border-radius: 12px;">
 
-##  Structure du Projet
+# OpenDev Madagascar
 
-- **frontend/** - Site public Next.js (vitrine portfolio)
-- **backend/** - API Node.js + Express + Prisma
-- **admin/** - Panel d'administration React
-- **shared/** - Types et constantes partagés
-- **docs/** - Documentation technique et guides
-- **scripts/** - Scripts utilitaires
+</div>
 
-##  Installation
+Professional portfolio showcasing OpenDev Madagascar's developer collective - A curated collection of delivered projects, client testimonials, and technical expertise. Built with modern web technologies to demonstrate our commitment to quality and innovation in software development.
 
-### Backend
-```bash
-cd backend
-npm install
-npx prisma generate
-npx prisma migrate dev
-npm run dev
-```
+<div style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px;">
 
-### Frontend
-```bash
-cd frontend
-npm install
-npm run dev
-```
+<img style="height: 20px;" src="https://img.shields.io/badge/Next.js-000000?style=flat-square&logo=nextdotjs&logoColor=white">
+<img style="height: 20px;" src="https://img.shields.io/badge/React-61DAFB?style=flat-square&logo=react&logoColor=black">
+<img style="height: 20px;" src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white">
+<img style="height: 20px;" src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white">
+<img style="height: 20px;" src="https://img.shields.io/badge/PostgreSQL-4169E1?style=flat-square&logo=postgresql&logoColor=white">
+<img style="height: 20px;" src="https://img.shields.io/badge/Prisma-5A67D8?style=flat-square&logo=prisma&logoColor=white">
+<img style="height: 20px;" src="https://img.shields.io/badge/shadcn/ui-000000?style=flat-square&logo=shadcnui&logoColor=white">
+<img style="height: 20px;" src="https://img.shields.io/badge/Framer_Motion-FF0054?style=flat-square&logo=framer&logoColor=white">
+<img style="height: 20px;" src="https://img.shields.io/badge/Supabase-3FCF8E?style=flat-square&logo=supabase&logoColor=black">
+<img style="height: 20px;" src="https://img.shields.io/badge/Zod-3068B7?style=flat-square&logo=zod&logoColor=white">
+<img style="height: 20px;" src="https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white">
+<img style="height: 20px;" src="https://img.shields.io/badge/Better_Auth-000000?style=flat-square&logo=key&logoColor=white">
+<img style="height: 20px;" src="https://img.shields.io/badge/TanStack-FF4154?style=flat-square&logo=tanstack&logoColor=white">
 
-### Admin
-```bash
-cd admin
-npm install
-npm run dev
-```
+</div>
 
-##  Documentation
+## Tech Stack
 
-Voir le dossier `docs/` pour la documentation complète :
-- `API.md` - Documentation de l'API
-- `DEPLOYMENT.md` - Guide de déploiement
-- `USER_GUIDE.md` - Guide utilisateur admin
-- `DEVELOPER_GUIDE.md` - Guide développeur
+| Category       | Technologies                                  |
+| -------------- | --------------------------------------------- |
+| **Framework**  | Next.js 16 (App Router, Server Components)    |
+| **UI**         | React 19, Tailwind CSS 4, shadcn/ui, Radix UI |
+| **Animation**  | Framer Motion, Motion                         |
+| **Database**   | PostgreSQL 16, Prisma ORM                    |
+| **Storage**    | Supabase (File Storage)                       |
+| **Auth**       | Better Auth                                   |
+| **Forms**      | TanStack Form                                 |
+| **Validation** | Zod                                           |
+| **Deployment** | Vercel                                        |
+| **Language**   | TypeScript 6.0                               |
 
-##  Technologies
+## License
 
-- **Frontend:** Next.js 14+, TypeScript, Tailwind CSS
-- **Backend:** Node.js, Express, Prisma, PostgreSQL
-- **Admin:** React, Vite, TypeScript
+Private project - All rights reserved.
