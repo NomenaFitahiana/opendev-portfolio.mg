@@ -93,7 +93,7 @@ model Project {
   status           ProjectStatus  @default(COMPLETED)
   featured         Boolean        @default(false)
   order            Int            @default(0)
-  testimonial      Testimonial?
+  testimonial      Testimonial[]
   createdAt        DateTime       @default(now())
   updatedAt        DateTime       @updatedAt
 }
@@ -128,7 +128,7 @@ model Testimonial {
   company    String
   content    String   @db.Text
   photo      String?
-  projectId  String?  @unique
+  projectId  String?
   project    Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
   active     Boolean  @default(true)
   createdAt  DateTime @default(now())
