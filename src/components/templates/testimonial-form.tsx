@@ -8,13 +8,20 @@ import {
 } from "@/actions/testimonial.action";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Loader } from "@/components/ui/loader";
 import { useRouter } from "next/navigation";
 import { testimonialSchema } from "@/schemas";
 import { FileUpload } from "@/components/ui/file-upload";
 import { z } from "zod";
+import { getSubmitLabel } from "@/lib/utils";
 
 type TestimonialFormValues = z.infer<typeof testimonialSchema>;
 
@@ -48,7 +55,7 @@ export function TestimonialForm({
       },
       onError: ({ error }) =>
         toast.error(error.serverError ?? "Erreur lors de la création"),
-    }
+    },
   );
 
   const { execute: update, isPending: isUpdating } = useAction(
@@ -60,7 +67,7 @@ export function TestimonialForm({
       },
       onError: ({ error }) =>
         toast.error(error.serverError ?? "Erreur lors de la mise à jour"),
-    }
+    },
   );
 
   const isPending = isCreating || isUpdating;
@@ -182,9 +189,7 @@ export function TestimonialForm({
         <Card>
           <CardHeader>
             <CardTitle className="text-base">Photo</CardTitle>
-            <CardDescription>
-              Photo du client (optionnel)
-            </CardDescription>
+            <CardDescription>Photo du client (optionnel)</CardDescription>
           </CardHeader>
           <CardContent>
             <FileUpload
@@ -252,15 +257,7 @@ export function TestimonialForm({
 
             <div className="flex flex-col gap-2">
               <Button type="submit" disabled={isPending} className="w-full">
-                {isPending ? (
-                  <>
-                    <Loader /> Enregistrement...
-                  </>
-                ) : mode === "edit" ? (
-                  "Mettre à jour"
-                ) : (
-                  "Créer le témoignage"
-                )}
+                {getSubmitLabel(isPending, mode)}
               </Button>
               <Button
                 variant="outline"

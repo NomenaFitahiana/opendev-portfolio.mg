@@ -48,8 +48,8 @@ export const navItems = [
     ],
   },
   {
-    title: "Statistiques",
-    url: "/stats",
+    title: "Analytique",
+    url: "/insights",
     icon: BarChart3,
   },
   {
@@ -70,7 +70,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="px-4 py-2 w-full font-semibold text-sm tracking-tight">
-        <Logo className="w-10 h-10 rounded-lg" labelClassName={"text-lg"} withLabel />
+        <Logo
+          className="w-10 h-10 rounded-lg"
+          labelClassName={"text-lg"}
+          withLabel
+        />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={navItems} />

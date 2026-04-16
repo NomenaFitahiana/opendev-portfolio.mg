@@ -2,7 +2,10 @@
 
 import { useForm } from "@/components/ui/tanstack-form";
 import { useAction } from "next-safe-action/hooks";
-import { createProjectAction, updateProjectAction } from "@/actions/project.action";
+import {
+  createProjectAction,
+  updateProjectAction,
+} from "@/actions/project.action";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,7 +15,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -21,6 +30,7 @@ import { Loader } from "../ui/loader";
 import { useRouter } from "next/navigation";
 import { ForwardRefEditor } from "./forward-ref-editor";
 import z from "zod";
+import { getSubmitLabel } from "@/lib/utils";
 
 type Technology = { id: string; name: string };
 
@@ -43,7 +53,7 @@ export const ProjectForm = ({
   const router = useRouter();
 
   const [selectedTechIds, setSelectedTechIds] = useState<string[]>(
-    defaultValues?.technologyIds ?? []
+    defaultValues?.technologyIds ?? [],
   );
 
   useEffect(() => {
@@ -61,7 +71,7 @@ export const ProjectForm = ({
       },
       onError: ({ error }) =>
         toast.error(error.serverError ?? "Erreur durant la creation du projet"),
-    }
+    },
   );
 
   const { execute: update, isPending: isUpdating } = useAction(
@@ -72,8 +82,10 @@ export const ProjectForm = ({
         router.push("/projects");
       },
       onError: ({ error }) =>
-        toast.error(error.serverError ?? "Erreur durant la mise a jour du projet"),
-    }
+        toast.error(
+          error.serverError ?? "Erreur durant la mise a jour du projet",
+        ),
+    },
   );
 
   const isPending = isCreating || isUpdating;
@@ -117,9 +129,7 @@ export const ProjectForm = ({
 
   const toggleTech = (id: string) => {
     setSelectedTechIds((prev) =>
-      prev.includes(id)
-        ? prev.filter((t) => t !== id)
-        : [...prev, id]
+      prev.includes(id) ? prev.filter((t) => t !== id) : [...prev, id],
     );
   };
 
@@ -209,7 +219,9 @@ export const ProjectForm = ({
               <div className="rounded-md border border-input overflow-hidden focus-within:ring-1 focus-within:ring-ring transition-shadow">
                 <ForwardRefEditor
                   markdown={form.getFieldValue("longDescription")}
-                  onChange={(value) => form.setFieldValue("longDescription", value)}
+                  onChange={(value) =>
+                    form.setFieldValue("longDescription", value)
+                  }
                   contentEditableClassName="prose prose-sm dark:prose-invert max-w-none min-h-[220px] px-4 py-3 focus:outline-none"
                   className="[&_.mdxeditor-toolbar]:border-b [&_.mdxeditor-toolbar]:bg-muted/40 [&_.mdxeditor-toolbar]:px-2 [&_.mdxeditor-toolbar]:py-1"
                 />
@@ -279,10 +291,11 @@ export const ProjectForm = ({
                     key={tech.id}
                     type="button"
                     onClick={() => toggleTech(tech.id)}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm border transition-colors ${selected
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                      selected
                         ? "bg-primary text-primary-foreground border-primary"
                         : "border-border hover:border-primary/50"
-                      }`}
+                    }`}
                   >
                     {tech.name}
                     {selected && <X className="size-3" />}
@@ -337,7 +350,7 @@ export const ProjectForm = ({
                       value={field.state.value}
                       onValueChange={(v) =>
                         field.handleChange(
-                          v as "COMPLETED" | "IN_PROGRESS" | "FEATURED"
+                          v as "COMPLETED" | "IN_PROGRESS" | "FEATURED",
                         )
                       }
                     >
@@ -376,13 +389,7 @@ export const ProjectForm = ({
 
             <div className="flex flex-col gap-2">
               <Button type="submit" disabled={isPending} className="w-full">
-                {isPending ? (
-                  <>
-                    <Loader /> Création en cours...
-                  </>
-                ) : (
-                  "Créer le projet"
-                )}
+                {getSubmitLabel(isPending, mode)}
               </Button>
               <Button
                 variant="outline"
@@ -433,11 +440,7 @@ export const ProjectForm = ({
                     </span>
                   </field.Label>
                   <field.Content>
-                    <field.Input
-                      type="number"
-                      min={0}
-                      placeholder="ex: 5000"
-                    />
+                    <field.Input type="number" min={0} placeholder="ex: 5000" />
                     <field.Message />
                   </field.Content>
                 </field.Field>
