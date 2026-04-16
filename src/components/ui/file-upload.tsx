@@ -1,15 +1,12 @@
 "use client";
 
 import { AlertCircleIcon, ImageIcon, UploadIcon, XIcon } from "lucide-react";
-
-import {
-  useFileUpload,
-  type FileWithPreview,
-} from "@/hooks/use-file-upload";
+import { useFileUpload, type FileWithPreview } from "@/hooks/use-file-upload";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { useCallback, useState } from "react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 type FileUploadProps = {
   value?: string;
@@ -34,7 +31,7 @@ export function FileUpload({
 }: FileUploadProps) {
   const maxSize = maxSizeMB * 1024 * 1024;
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>(
-    value ? "success" : "idle"
+    value ? "success" : "idle",
   );
   const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [uploadError, setUploadError] = useState<string>("");
@@ -60,11 +57,14 @@ export function FileUpload({
 
       if (error) {
         setUploadError(error.message);
+        toast.error(error.message);
         setUploadStatus("error");
         return null;
       }
 
-      const { data: urlData } = supabase.storage.from(bucket).getPublicUrl(data.path);
+      const { data: urlData } = supabase.storage
+        .from(bucket)
+        .getPublicUrl(data.path);
 
       if (!urlData.publicUrl) {
         setUploadError("Impossible d'obtenir l'URL du fichier");
@@ -76,7 +76,7 @@ export function FileUpload({
       setUploadStatus("success");
       return urlData.publicUrl;
     },
-    [bucket, path, supabase.storage]
+    [bucket, path, supabase.storage],
   );
 
   const handleFilesAdded = useCallback(
@@ -91,7 +91,7 @@ export function FileUpload({
         onChange(publicUrl);
       }
     },
-    [onChange, uploadToSupabase]
+    [onChange, uploadToSupabase],
   );
 
   const [
@@ -102,7 +102,6 @@ export function FileUpload({
       handleDragOver,
       handleDrop,
       openFileDialog,
-      removeFile,
       getInputProps,
       clearFiles,
     },
@@ -137,12 +136,10 @@ export function FileUpload({
         <div
           className={cn(
             "relative flex min-h-52 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors has-[input:focus]:border-ring has-[input:focus]:ring-[3px] has-[input:focus]:ring-ring/50",
-            isDragging
-              ? "border-primary bg-accent/50"
-              : "border-input",
+            isDragging ? "border-primary bg-accent/50" : "border-input",
             uploadStatus === "uploading" && "bg-accent/30",
             displayError && "border-destructive",
-            disabled && "opacity-50 cursor-not-allowed"
+            disabled && "opacity-50 cursor-not-allowed",
           )}
           data-dragging={isDragging || undefined}
           onDragEnter={handleDragEnter}
@@ -177,7 +174,7 @@ export function FileUpload({
                 alt={files[0]?.file?.name || "Uploaded image"}
                 className={cn(
                   "mx-auto max-h-full rounded object-contain",
-                  uploadStatus === "uploading" && "opacity-50"
+                  uploadStatus === "uploading" && "opacity-50",
                 )}
                 src={previewUrl}
               />
@@ -194,12 +191,16 @@ export function FileUpload({
                 SVG, PNG, JPG ou GIF (max. {maxSizeMB}MB)
               </p>
               <Button
+                type="button"
                 className="mt-4"
                 onClick={openFileDialog}
                 variant="outline"
                 disabled={disabled || uploadStatus === "uploading"}
               >
-                <UploadIcon aria-hidden="true" className="-ms-1 size-4 opacity-60" />
+                <UploadIcon
+                  aria-hidden="true"
+                  className="-ms-1 size-4 opacity-60"
+                />
                 Sélectionner une image
               </Button>
             </div>
@@ -222,7 +223,10 @@ export function FileUpload({
       </div>
 
       {displayError && (
-        <div className="flex items-center gap-1 text-destructive text-xs" role="alert">
+        <div
+          className="flex items-center gap-1 text-destructive text-xs"
+          role="alert"
+        >
           <AlertCircleIcon className="size-3 shrink-0" />
           <span>{displayError}</span>
         </div>
