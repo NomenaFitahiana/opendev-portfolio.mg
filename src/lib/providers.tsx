@@ -1,31 +1,23 @@
 "use client";
 
-import { ReactNode } from "react"
-import { QueryProvider } from "./query-client"
-import { Toaster } from "sonner"
+import { ReactNode } from "react";
+import { QueryProvider } from "./query-client";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { ThemeProvider, useTheme } from "next-themes";
-import NextTopLoader from "nextjs-toploader";
+import { ThemeProvider } from "next-themes";
+import AppUI from "@/lib/app-ui";
 
-// This file contains all providers that the application needs
-export const Providers = ({ children }: Readonly<{ children: ReactNode }>) => {
-  const { theme } = useTheme();
-
+export function Providers({ children }: { children: ReactNode }) {
   return (
     <QueryProvider>
       <SidebarProvider>
         <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+            storageKey="theme"
         >
-          <Toaster position='bottom-right' richColors />
-          <NextTopLoader
-            showSpinner={false}
-            color={theme === "light" ? "#292524" : "#f5f5f4"}
-          />
-          {children}
+          <AppUI>{children}</AppUI>
         </ThemeProvider>
       </SidebarProvider>
     </QueryProvider>

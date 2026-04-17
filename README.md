@@ -33,13 +33,13 @@ Professional portfolio showcasing OpenDev Madagascar's developer collective - A 
 | **Framework**  | Next.js 16 (App Router, Server Components)    |
 | **UI**         | React 19, Tailwind CSS 4, shadcn/ui, Radix UI |
 | **Animation**  | Framer Motion, Motion                         |
-| **Database**   | PostgreSQL 16, Prisma ORM                    |
+| **Database**   | PostgreSQL 16, Prisma ORM                     |
 | **Storage**    | Supabase (File Storage)                       |
 | **Auth**       | Better Auth                                   |
 | **Forms**      | TanStack Form                                 |
 | **Validation** | Zod                                           |
 | **Deployment** | Vercel                                        |
-| **Language**   | TypeScript 6.0                               |
+| **Language**   | TypeScript 6.0                                |
 
 ## License
 
