@@ -142,6 +142,8 @@ model Contact {
   email     String
   message   String        @db.Text
   budget    String?
+  reply     String?      @db.Text
+  replyAt   DateTime?
   status    ContactStatus @default(UNREAD)
   createdAt DateTime      @default(now())
   updatedAt DateTime      @updatedAt
@@ -175,5 +177,6 @@ enum TechCategory {
 enum ContactStatus {
   UNREAD
   READ
+  AWAITING
   ARCHIVED
 }

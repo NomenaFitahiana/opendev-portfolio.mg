@@ -5,36 +5,24 @@ import { ContactMock, ContactStatus } from "@/mocks/contacts";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
 
-const ALPHABET_COLORS: Record<string, string> = {
-  A: "bg-blue-500",
-  B: "bg-teal-500",
-  C: "bg-amber-500",
-  D: "bg-orange-500",
-  E: "bg-pink-500",
-  F: "bg-rose-500",
-  G: "bg-red-500",
-  H: "bg-red-600",
-  I: "bg-yellow-500",
-  J: "bg-lime-500",
-  K: "bg-green-500",
-  L: "bg-emerald-500",
-  M: "bg-green-600",
-  N: "bg-cyan-500",
-  O: "bg-sky-500",
-  P: "bg-blue-600",
-  Q: "bg-indigo-500",
-  R: "bg-violet-500",
-  S: "bg-purple-500",
-  T: "bg-fuchsia-500",
-  U: "bg-pink-400",
-  V: "bg-rose-400",
-  W: "bg-red-400",
-  X: "bg-orange-400",
-  Y: "bg-amber-400",
-  Z: "bg-yellow-400",
-};
+const CATEGORY_COLORS = [
+  "bg-blue-500/20 text-blue-700 dark:text-blue-300",
+  "bg-green-500/20 text-green-700 dark:text-green-300",
+  "bg-purple-500/20 text-purple-700 dark:text-purple-300",
+  "bg-orange-500/20 text-orange-700 dark:text-orange-300",
+  "bg-zinc-500/20 text-zinc-700 dark:text-zinc-300",
+];
 
 function getInitials(name: string): string {
   const parts = name.split(" ");
@@ -46,7 +34,8 @@ function getInitials(name: string): string {
 
 function getAvatarColor(name: string): string {
   const firstLetter = name[0].toUpperCase();
-  return ALPHABET_COLORS[firstLetter] || "bg-gray-500";
+  const charCode = firstLetter.charCodeAt(0) - 65;
+  return CATEGORY_COLORS[charCode % CATEGORY_COLORS.length];
 }
 
 function formatDate(date: Date): string {
@@ -67,12 +56,10 @@ interface ContactDetailProps {
 
 export function ContactDetail({ contact, onStatusChange, onBack }: ContactDetailProps) {
   const [replyText, setReplyText] = useState("");
-  const [isReplying, setIsReplying] = useState(false);
 
   const handleSendReply = () => {
     console.log("Sending reply to:", contact.email, "Message:", replyText);
     setReplyText("");
-    setIsReplying(false);
   };
 
   return (
@@ -149,38 +136,60 @@ export function ContactDetail({ contact, onStatusChange, onBack }: ContactDetail
           </svg>
         </Button>
 
-        <Button
-          variant="ghost"
-          size="icon"
-          title="Supprimer"
-          onClick={() => onStatusChange(contact.id, "ARCHIVED")}
-          className="text-destructive hover:text-destructive"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-trash-2"
-          >
-            <path d="M3 6h18" />
-            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-            <line x1="10" x2="10" y1="11" y2="17" />
-            <line x1="14" x2="14" y1="11" y2="17" />
-          </svg>
-        </Button>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              title="Supprimer"
+              className="text-destructive hover:text-destructive"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-trash-2"
+              >
+                <path d="M3 6h18" />
+                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
+                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
+                <line x1="10" x2="10" y1="11" y2="17" />
+                <line x1="14" x2="14" y1="11" y2="17" />
+              </svg>
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Supprimer le message</DialogTitle>
+              <DialogDescription>
+                Êtes-vous sûr de vouloir supprimer ce message de {contact.name}? Cette action est irréversible.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => {}}>
+                Annuler
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={() => onStatusChange(contact.id, "ARCHIVED")}
+              >
+                Supprimer
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         <Button
           variant="ghost"
           size="icon"
           title="En attente"
-          onClick={() => onStatusChange(contact.id, "READ")}
+          onClick={() => onStatusChange(contact.id, "AWAITING")}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -203,7 +212,7 @@ export function ContactDetail({ contact, onStatusChange, onBack }: ContactDetail
       <div className="flex-1 overflow-auto p-4">
         <div className="flex items-center gap-3 mb-4">
           <Avatar size="lg" className="shrink-0">
-            <AvatarFallback className={cn(getAvatarColor(contact.name), "text-white font-medium text-lg")}>
+            <AvatarFallback className={cn(getAvatarColor(contact.name), "font-medium text-lg")}>
               {getInitials(contact.name)}
             </AvatarFallback>
           </Avatar>
@@ -228,34 +237,19 @@ export function ContactDetail({ contact, onStatusChange, onBack }: ContactDetail
       </div>
 
       <div className="border-t p-4">
-        {!isReplying ? (
-          <Button onClick={() => setIsReplying(true)} className="w-full">
-            Répondre
-          </Button>
-        ) : (
-          <div className="flex flex-col gap-2">
-            <Textarea
-              placeholder="Tapez votre réponse..."
-              value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
-              rows={4}
-            />
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setIsReplying(false);
-                  setReplyText("");
-                }}
-              >
-                Annuler
-              </Button>
-              <Button onClick={handleSendReply} disabled={!replyText.trim()}>
-                Envoyer
-              </Button>
-            </div>
+        <div className="flex flex-col gap-2">
+          <Textarea
+            placeholder="Tapez votre réponse..."
+            value={replyText}
+            onChange={(e) => setReplyText(e.target.value)}
+            rows={4}
+          />
+<div className="flex justify-end">
+            <Button onClick={handleSendReply} disabled={!replyText.trim()}>
+              Envoyer
+            </Button>
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

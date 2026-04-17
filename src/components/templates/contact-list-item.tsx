@@ -4,34 +4,13 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import { ContactMock, ContactStatus } from "@/mocks/contacts";
 
-const ALPHABET_COLORS: Record<string, string> = {
-  A: "bg-blue-500",
-  B: "bg-teal-500",
-  C: "bg-amber-500",
-  D: "bg-orange-500",
-  E: "bg-pink-500",
-  F: "bg-rose-500",
-  G: "bg-red-500",
-  H: "bg-red-600",
-  I: "bg-yellow-500",
-  J: "bg-lime-500",
-  K: "bg-green-500",
-  L: "bg-emerald-500",
-  M: "bg-green-600",
-  N: "bg-cyan-500",
-  O: "bg-sky-500",
-  P: "bg-blue-600",
-  Q: "bg-indigo-500",
-  R: "bg-violet-500",
-  S: "bg-purple-500",
-  T: "bg-fuchsia-500",
-  U: "bg-pink-400",
-  V: "bg-rose-400",
-  W: "bg-red-400",
-  X: "bg-orange-400",
-  Y: "bg-amber-400",
-  Z: "bg-yellow-400",
-};
+const CATEGORY_COLORS = [
+  "bg-blue-500/20 text-blue-700 dark:text-blue-300",
+  "bg-green-500/20 text-green-700 dark:text-green-300",
+  "bg-purple-500/20 text-purple-700 dark:text-purple-300",
+  "bg-orange-500/20 text-orange-700 dark:text-orange-300",
+  "bg-zinc-500/20 text-zinc-700 dark:text-zinc-300",
+];
 
 function getInitials(name: string): string {
   const parts = name.split(" ");
@@ -43,7 +22,8 @@ function getInitials(name: string): string {
 
 function getAvatarColor(name: string): string {
   const firstLetter = name[0].toUpperCase();
-  return ALPHABET_COLORS[firstLetter] || "bg-gray-500";
+  const charCode = firstLetter.charCodeAt(0) - 65;
+  return CATEGORY_COLORS[charCode % CATEGORY_COLORS.length];
 }
 
 function truncateMessage(message: string, maxLength: number = 60): string {
@@ -93,7 +73,7 @@ export function ContactListItem({ contact, onClick, isSelected }: ContactListIte
       )}
 
       <Avatar size="default" className="shrink-0">
-        <AvatarFallback className={cn(getAvatarColor(contact.name), "text-white font-medium")}>
+        <AvatarFallback className={cn(getAvatarColor(contact.name), "font-medium")}>
           {getInitials(contact.name)}
         </AvatarFallback>
       </Avatar>
