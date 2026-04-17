@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ContactMock, ContactStatus } from "@/mocks/contacts";
+import { Contact, ContactStatus } from "@/types/contact";
 import { ContactListItem } from "./contact-list-item";
 import { ContactDetail } from "@/components/templates/contact-detail";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,25 +15,25 @@ const tabs: { id: TabType; label: string; status: ContactStatus[] }[] = [
   { id: "archived", label: "Archived", status: ["ARCHIVED"] },
 ];
 
-function getContactsByStatus(contacts: ContactMock[], status: ContactStatus[]): ContactMock[] {
+function getContactsByStatus(contacts: Contact[], status: ContactStatus[]): Contact[] {
   return contacts.filter((contact) => status.includes(contact.status));
 }
 
-function getUnreadCount(contacts: ContactMock[]): number {
+function getUnreadCount(contacts: Contact[]): number {
   return contacts.filter((c) => c.status === "UNREAD").length;
 }
 
-function getAwaitingCount(contacts: ContactMock[]): number {
+function getAwaitingCount(contacts: Contact[]): number {
   return contacts.filter((c) => c.status === "AWAITING").length;
 }
 
-function getArchivedCount(contacts: ContactMock[]): number {
+function getArchivedCount(contacts: Contact[]): number {
   return contacts.filter((c) => c.status === "ARCHIVED").length;
 }
 
-export function ContactsPageClient({ initialContacts }: { initialContacts: ContactMock[] }) {
+export function ContactsPageClient({ initialContacts }: { initialContacts: Contact[] }) {
   const [activeTab, setActiveTab] = useState<TabType>("inbox");
-  const [selectedContact, setSelectedContact] = useState<ContactMock | null>(null);
+  const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
   const [contacts, setContacts] = useState(initialContacts);
 
   const currentTab = tabs.find((t) => t.id === activeTab)!;
@@ -46,7 +46,7 @@ export function ContactsPageClient({ initialContacts }: { initialContacts: Conta
     setSelectedContact((prev) => (prev?.id === contactId ? { ...prev, status: newStatus } : prev));
   };
 
-  const handleSelectContact = (contact: ContactMock) => {
+  const handleSelectContact = (contact: Contact) => {
     setSelectedContact(contact);
     if (contact.status === "UNREAD") {
       handleStatusChange(contact.id, "READ");

@@ -2,7 +2,7 @@
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
-import { ContactMock, ContactStatus } from "@/mocks/contacts";
+import { Contact, ContactStatus } from "@/types/contact";
 
 const CATEGORY_COLORS = [
   "bg-blue-500/20 text-blue-700 dark:text-blue-300",
@@ -51,7 +51,7 @@ function formatDate(date: Date): string {
 }
 
 interface ContactListItemProps {
-  contact: ContactMock;
+  contact: Contact;
   onClick?: () => void;
   isSelected?: boolean;
 }

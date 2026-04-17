@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { ContactStatus } from "@/mocks/contacts";
+import { ContactStatus } from "@/types/contact";
 
 export const contactStatusValues = ["UNREAD", "READ", "AWAITING", "ARCHIVED"] as const;
 

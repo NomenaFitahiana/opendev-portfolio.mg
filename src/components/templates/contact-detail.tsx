@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
-import { ContactMock, ContactStatus } from "@/mocks/contacts";
+import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { Contact, ContactStatus } from "@/types/contact";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -15,6 +16,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import {
+  archiveContactAction,
+  markContactAsUnreadAction,
+  setContactAwaitingAction,
+  deleteContactAction,
+  markContactAsReadAction,
+} from "@/actions";
 
 const CATEGORY_COLORS = [
   "bg-blue-500/20 text-blue-700 dark:text-blue-300",
@@ -49,17 +57,36 @@ function formatDate(date: Date): string {
 }
 
 interface ContactDetailProps {
-  contact: ContactMock;
+  contact: Contact;
   onStatusChange: (contactId: string, newStatus: ContactStatus) => void;
   onBack: () => void;
 }
 
 export function ContactDetail({ contact, onStatusChange, onBack }: ContactDetailProps) {
+  const router = useRouter();
   const [replyText, setReplyText] = useState("");
+  const [isPending, startTransition] = useTransition();
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
-  const handleSendReply = () => {
-    console.log("Sending reply to:", contact.email, "Message:", replyText);
-    setReplyText("");
+  const handleStatusChange = (action: () => Promise<{ serverError?: string }>, newStatus: ContactStatus) => {
+    startTransition(async () => {
+      await action();
+      onStatusChange(contact.id, newStatus);
+    });
+  };
+
+  const handleDelete = () => {
+    startTransition(async () => {
+      await deleteContactAction({ id: contact.id });
+      router.refresh();
+      onBack();
+    });
+  };
+
+  const handleMarkAsRead = () => {
+    startTransition(async () => {
+      await markContactAsReadAction({ id: contact.id });
+    });
   };
 
   return (
@@ -92,7 +119,8 @@ export function ContactDetail({ contact, onStatusChange, onBack }: ContactDetail
           variant="ghost"
           size="icon"
           title="Marquer comme non lu"
-          onClick={() => onStatusChange(contact.id, "UNREAD")}
+          disabled={isPending}
+          onClick={() => handleStatusChange(() => markContactAsUnreadAction({ id: contact.id }), "UNREAD")}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -115,7 +143,8 @@ export function ContactDetail({ contact, onStatusChange, onBack }: ContactDetail
           variant="ghost"
           size="icon"
           title="Archiver"
-          onClick={() => onStatusChange(contact.id, "ARCHIVED")}
+          disabled={isPending}
+          onClick={() => handleStatusChange(() => archiveContactAction({ id: contact.id }), "ARCHIVED")}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -136,7 +165,7 @@ export function ContactDetail({ contact, onStatusChange, onBack }: ContactDetail
           </svg>
         </Button>
 
-        <Dialog>
+        <Dialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
           <DialogTrigger asChild>
             <Button
               variant="ghost"
@@ -172,12 +201,13 @@ export function ContactDetail({ contact, onStatusChange, onBack }: ContactDetail
               </DialogDescription>
             </DialogHeader>
             <DialogFooter>
-              <Button variant="outline" onClick={() => {}}>
+              <Button variant="outline" onClick={() => setIsDeleteOpen(false)}>
                 Annuler
               </Button>
               <Button
                 variant="destructive"
-                onClick={() => onStatusChange(contact.id, "ARCHIVED")}
+                onClick={handleDelete}
+                disabled={isPending}
               >
                 Supprimer
               </Button>
@@ -189,7 +219,8 @@ export function ContactDetail({ contact, onStatusChange, onBack }: ContactDetail
           variant="ghost"
           size="icon"
           title="En attente"
-          onClick={() => onStatusChange(contact.id, "AWAITING")}
+          disabled={isPending}
+          onClick={() => handleStatusChange(() => setContactAwaitingAction({ id: contact.id }), "AWAITING")}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -244,8 +275,8 @@ export function ContactDetail({ contact, onStatusChange, onBack }: ContactDetail
             onChange={(e) => setReplyText(e.target.value)}
             rows={4}
           />
-<div className="flex justify-end">
-            <Button onClick={handleSendReply} disabled={!replyText.trim()}>
+          <div className="flex justify-end">
+            <Button onClick={handleMarkAsRead} disabled={!replyText.trim()}>
               Envoyer
             </Button>
           </div>
