@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useCallback, useState } from "react";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { getImageStorage, isLocalStorage } from "@/lib/storage";
 
 type FileUploadProps = {
   value?: string;
@@ -29,6 +30,7 @@ export function FileUpload({
   className,
   disabled,
 }: FileUploadProps) {
+  const storage = getImageStorage();
   const maxSize = maxSizeMB * 1024 * 1024;
   const [uploadStatus, setUploadStatus] = useState<UploadStatus>(
     value ? "success" : "idle",
@@ -86,9 +88,17 @@ export function FileUpload({
       const file = files[0].file;
       if (!(file instanceof File)) return;
 
-      const publicUrl = await uploadToSupabase(file);
-      if (publicUrl) {
-        onChange(publicUrl);
+      if (isLocalStorage()) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          onChange(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        const publicUrl = await uploadToSupabase(file);
+        if (publicUrl) {
+          onChange(publicUrl);
+        }
       }
     },
     [onChange, uploadToSupabase],

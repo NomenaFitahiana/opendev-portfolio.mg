@@ -51,6 +51,7 @@
     "react-dom": "19.2.5",
     "react-use-measure": "^2.1.7",
     "recharts": "3.8.1",
+    "remark-gfm": "^4.0.1",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.5.0",
     "tailwind-variants": "^3.2.2",
