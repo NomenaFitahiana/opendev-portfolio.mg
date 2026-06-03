@@ -1,27 +1,19 @@
-import { Suspense } from "react";
 import { createMetadata } from "@/lib/metadata";
 import { BlogFilters } from "@/components/blog/blog-filters";
 import { BlogCard } from "@/components/blog/blog-card";
-import { getPublishedPosts } from "@/lib/blog";
+import { getPublishedPosts, getAllTags } from "@/lib/blog";
+
+export const dynamic = "force-static";
+export const revalidate = 3600;
 
 export const metadata = createMetadata({
   title: "Blog",
   description: "Actualités et articles sur nos projets, technologies et événements.",
 });
 
-type SearchParams = {
-  category?: string;
-  page?: string;
-};
-
-export default async function BlogPage({
-  searchParams,
-}: {
-  searchParams: Promise<SearchParams>;
-}) {
-  const params = await searchParams;
-  const category = params.category;
-  const posts = await getPublishedPosts({ category });
+export default async function BlogPage() {
+  const posts = await getPublishedPosts();
+  const tags = await getAllTags();
 
   return (
     <div className="container mx-auto py-20">
@@ -32,15 +24,7 @@ export default async function BlogPage({
         </p>
       </div>
 
-      <Suspense fallback={<div>Chargement...</div>}>
-        <BlogFilters />
-      </Suspense>
-
-      {category && (
-        <p className="col-span-full mt-4 text-sm text-muted-foreground">
-          Filtré par: {category}
-        </p>
-      )}
+      <BlogFilters tags={tags} />
 
       {posts.length > 0 ? (
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

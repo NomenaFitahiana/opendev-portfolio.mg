@@ -3,9 +3,12 @@ import Image from "next/image";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { createMetadata } from "@/lib/metadata";
-import { getPostBySlug } from "@/lib/blog";
+import { getPostBySlug, getAllPostSlugs } from "@/lib/blog";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+
+export const dynamic = "force-static";
+export const revalidate = 3600;
 
 const categoryLabels: Record<string, string> = {
   ENTREPRISE: "Entreprise",
@@ -17,6 +20,13 @@ const categoryLabels: Record<string, string> = {
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+}
+export async function generateStaticParams() {
+  const slugs = await getAllPostSlugs();
+
+  return slugs.map((slug) => ({
+    slug,
+  }));
 }
 
 export async function generateMetadata({ params }: PageProps) {
