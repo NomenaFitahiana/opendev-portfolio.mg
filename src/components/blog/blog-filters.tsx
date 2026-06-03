@@ -1,7 +1,4 @@
-"use client";
-
-import { useRouter, useSearchParams } from "next/navigation";
-import type { BlogCategory } from "@/types/blog";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { BLOG_CATEGORIES } from "@/types/blog";
 
@@ -15,41 +12,34 @@ const categoryLabels: Record<string, string> = {
 
 interface BlogFiltersProps {
   tags?: string[];
+  currentCategory?: string;
 }
 
-export function BlogFilters({ tags = [] }: BlogFiltersProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const currentCategory = searchParams.get("category");
-
-  function setCategory(category: string | null) {
-    const params = new URLSearchParams(searchParams.toString());
-    if (category) {
-      params.set("category", category);
-    } else {
-      params.delete("category");
-    }
-    router.push(`/blog?${params.toString()}`);
-  }
-
+export function BlogFilters({ tags = [], currentCategory }: BlogFiltersProps) {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap gap-2">
         <Button
           variant={!currentCategory ? "default" : "outline"}
           size="sm"
-          onClick={() => setCategory(null)}
+          asChild={!currentCategory ? false : true}
         >
-          Tous
+          {!currentCategory ? (
+            "Tous"
+          ) : (
+            <Link href="/blog">Tous</Link>
+          )}
         </Button>
         {BLOG_CATEGORIES.map((category) => (
           <Button
             key={category}
             variant={currentCategory === category ? "default" : "outline"}
             size="sm"
-            onClick={() => setCategory(category)}
+            asChild
           >
-            {categoryLabels[category] || category}
+            <Link href={`/blog/category/${category.toLowerCase()}`}>
+              {categoryLabels[category] || category}
+            </Link>
           </Button>
         ))}
       </div>

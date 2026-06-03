@@ -129,6 +129,122 @@ describe("deleteProjectAction", () => {
   });
 });
 
+describe("updateProjectAction (edit flow)", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("met à jour un projet existant avec des données valides", async () => {
+    mockPrisma.project.findFirst.mockResolvedValue(null);
+    mockPrisma.project.update.mockResolvedValue({
+      id: "project-1",
+      title: "Titre mis a jour",
+      slug: "titre-mis-a-jour",
+      clientName: "Acme Corp",
+      status: "COMPLETED",
+      duration: 45,
+      teamSize: 4,
+    });
+
+    await expect(
+      updateProjectAction({
+        id: "project-1",
+        title: "Titre mis a jour",
+        clientName: "Acme Corp",
+        shortDescription: "Description courte",
+        longDescription: "Description longue detaillee du projet",
+        duration: 45,
+        teamSize: 4,
+        technologyIds: ["tech-1", "tech-2"],
+      })
+    ).resolves.not.toThrow();
+
+    expect(mockPrisma.project.update).toHaveBeenCalledWith({
+      where: { id: "project-1" },
+      data: expect.objectContaining({
+        title: "Titre mis a jour",
+        slug: "titre-mis-a-jour",
+        technologies: {
+          set: [],
+          connect: [{ id: "tech-1" }, { id: "tech-2" }],
+        },
+      }),
+    });
+  });
+
+  it("rejette si un autre projet a déjà le même slug (titre)", async () => {
+    mockPrisma.project.findFirst.mockResolvedValue({
+      id: "other-project",
+      slug: "titre-existant",
+    });
+
+    const result = await updateProjectAction({
+      id: "project-1",
+      title: "Titre existant",
+      clientName: "Client",
+      shortDescription: "Description",
+      longDescription: "Description longue détaillée du projet",
+      duration: 10,
+      teamSize: 1,
+      technologyIds: [],
+    });
+
+    expect(result).toHaveProperty("serverError");
+    expect(mockPrisma.project.findFirst).toHaveBeenCalledWith({
+      where: { slug: "titre-existant", NOT: { id: "project-1" } },
+    });
+  });
+
+  it("met à jour sans technologie si technologyIds est vide", async () => {
+    mockPrisma.project.findFirst.mockResolvedValue(null);
+    mockPrisma.project.update.mockResolvedValue({ id: "project-1" });
+
+    await updateProjectAction({
+      id: "project-1",
+      title: "Projet sans tech",
+      clientName: "Client",
+      shortDescription: "Description",
+      longDescription: "Description longue détaillée du projet",
+      duration: 10,
+      teamSize: 1,
+      technologyIds: [],
+    });
+
+    expect(mockPrisma.project.update).toHaveBeenCalledWith({
+      where: { id: "project-1" },
+      data: expect.objectContaining({
+        technologies: {
+          set: [],
+          connect: [],
+        },
+      }),
+    });
+  });
+
+  it("génère un nouveau slug quand le titre change", async () => {
+    mockPrisma.project.findFirst.mockResolvedValue(null);
+    mockPrisma.project.update.mockResolvedValue({ id: "project-1" });
+
+    await updateProjectAction({
+      id: "project-1",
+      title: "Nouveau Titre Projet!",
+      clientName: "Client",
+      shortDescription: "Description",
+      longDescription: "Description longue détaillée du projet",
+      duration: 10,
+      teamSize: 1,
+      technologyIds: [],
+    });
+
+    expect(mockPrisma.project.update).toHaveBeenCalledWith({
+      where: { id: "project-1" },
+      data: expect.objectContaining({
+        slug: "nouveau-titre-projet",
+      }),
+    });
+  });
+});
+
 describe("duplicateProjectAction", () => {
   beforeEach(() => {
     vi.clearAllMocks();

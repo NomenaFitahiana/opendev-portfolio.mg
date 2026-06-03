@@ -1,4 +1,4 @@
-import { contactSchema, projectSchema, loginSchema } from "@/schemas"
+import { contactSchema, projectSchema, loginSchema, resetPasswordSchema } from "@/schemas"
 
 describe("contactSchema", () => {
   const validContact = {
@@ -99,6 +99,50 @@ describe("loginSchema", () => {
 
   it("rejette un mot de passe trop court", () => {
     const result = loginSchema.safeParse({ email: "admin@opendev.mg", password: "court" })
+    expect(result.success).toBe(false)
+  })
+
+  it("rejette un email invalide", () => {
+    const result = loginSchema.safeParse({ email: "pas-un-email", password: "motdepasse123" })
+    expect(result.success).toBe(false)
+  })
+
+  it("accepte rememberMe optionnel", () => {
+    const result = loginSchema.safeParse({ email: "admin@opendev.mg", password: "motdepasse123", rememberMe: true })
+    expect(result.success).toBe(true)
+  })
+})
+
+describe("resetPasswordSchema", () => {
+  it("accepte des mots de passe valides et identiques", () => {
+    const result = resetPasswordSchema.safeParse({
+      newPassword: "nouveauMotDePasse123",
+      confirmPassword: "nouveauMotDePasse123",
+    })
+    expect(result.success).toBe(true)
+  })
+
+  it("rejette un nouveau mot de passe trop court", () => {
+    const result = resetPasswordSchema.safeParse({
+      newPassword: "court",
+      confirmPassword: "court",
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it("rejette si les mots de passe ne correspondent pas", () => {
+    const result = resetPasswordSchema.safeParse({
+      newPassword: "motDePasseValide123",
+      confirmPassword: "autreMotDePasse456",
+    })
+    expect(result.success).toBe(false)
+  })
+
+  it("rejette un nouveau mot de passe vide", () => {
+    const result = resetPasswordSchema.safeParse({
+      newPassword: "",
+      confirmPassword: "",
+    })
     expect(result.success).toBe(false)
   })
 })
